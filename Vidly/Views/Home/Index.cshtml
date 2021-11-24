@@ -1,0 +1,152 @@
+﻿@{
+    ViewBag.Title = "Home Page";
+}
+
+<div class="wallpaper-container">
+    <div class="wallpaper wallpaper1 active">
+        <div class="mask"></div>
+    </div>
+    <div class="wallpaper wallpaper2">
+        <div class="mask"></div>
+    </div>
+    <div class="wallpaper wallpaper3">
+        <div class="mask"></div>
+    </div>
+    <div class="wallpaper wallpaper4">
+        <div class="mask"></div>
+    </div>
+    <div class="wallpaper wallpaper5">
+        <div class="mask"></div>
+    </div>
+    <div class="wallpaper wallpaper6">
+        <div class="mask"></div>
+    </div>
+    <div class="wallpaper wallpaper7">
+        <div class="mask"></div>
+    </div>
+    <section>
+        <h1>Your Night Is Ours</h1>
+        <h4>And Popcorn Is Yours.</h4>
+    </section>
+</div>
+
+<style>
+    .wallpaper-container, .wallpaper {
+        height: 100vh;
+        margin: 0px auto;
+        position: relative;
+    }
+
+    .wallpaper-container .wallpaper {
+        display: none;
+        height: 100%;
+        text-align: center;
+        background-size: cover;
+    }
+
+    .wallpaper1 {
+        background: url('../../Images/wall1.jpg') no-repeat center;
+    }
+
+    .wallpaper2 {
+        background: url('../../Images/wall2.jpg') no-repeat center;
+    }
+
+    .wallpaper3 {
+        background: url('../../Images/wall3.jpg') no-repeat center;
+    }
+
+    .wallpaper4 {
+        background: url('../../Images/wall4.jpg') no-repeat center;
+    }
+
+    .wallpaper5 {
+        background: url('../../Images/wall6.jpg') no-repeat center;
+    }
+
+    .wallpaper6 {
+        background: url('../../Images/wall7.jpg') no-repeat center;
+    }
+
+    .wallpaper7 {
+        background: url('../../Images/wall8.jpg') no-repeat center;
+    }
+
+    .mask {
+        background-color: rgb(0 0 0 / 0.45);
+        width: 100%;
+        height: 100%;
+    }
+
+    .wallpaper-container section {
+        text-align: center;
+        position: absolute;
+        top: 50px;
+        /*padding: 5px;*/
+        border-top: 2px solid;
+        border-bottom: 2px solid;
+        border-radius: 10px;
+    }
+
+    body {
+        position: relative;
+        padding-bottom: 0px;
+        overflow: hidden;
+    }
+
+    footer {
+        position: absolute;
+        bottom: 60px;
+        left: 25px;
+    }
+</style>
+
+<script>
+    $(function () {
+        $("body").innerHeight($(window).innerHeight());
+
+        $(".body-content, .container").css({
+            "margin-top": "0px",
+            "padding": "0px",
+            "max-width": "100%"
+        });
+
+        let sectionWidth = $('.wallpaper-container section').innerWidth() / -2;
+        $(".wallpaper-container section").css({
+            "left": "50%",
+            "margin-left": sectionWidth + 'px'
+        });
+
+        $(".wallpaper-container .wallpaper.active").fadeIn(150);
+        (function scrollWallpaper() {
+            $(".wallpaper-container .wallpaper.active").each(function () {
+                if (!$(this).is(':last-of-type')) {
+                    $(this).delay(8000).fadeOut(1000, function () {
+                        $(this).removeClass('active').next().addClass('active').fadeIn();
+                        scrollWallpaper();
+                    });
+                } else {
+                    $(this).delay(8000).fadeOut(1000, function () {
+                        $(this).removeClass('active');
+                        $(".wallpaper-container div.wallpaper").eq(0).addClass('active').fadeIn();
+                        scrollWallpaper();
+                    });
+                }
+            })
+        }());
+
+        $(".wallpaper-container, .wallpaper").innerHeight($(window).innerHeight() - $('nav').innerHeight());
+
+        $(window).on('resize', function () {
+            sectionWidth = $('.wallpaper-container section').innerWidth() / -2;
+            $(".wallpaper-container section").css({
+                "left": "50%",
+                "margin-left": sectionWidth + 'px'
+            });
+
+            console.log($(window).innerHeight() + "-" + $('nav').innerHeight());
+            console.log($(window).innerHeight() - $('nav').innerHeight());
+            $(".wallpaper-container, .wallpaper").innerHeight($(window).innerHeight() - $('nav').innerHeight());
+        });
+    });
+</script> 

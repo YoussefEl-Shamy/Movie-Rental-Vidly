@@ -1,0 +1,204 @@
+﻿@*@model IEnumerable<Vidly.Models.Movie>*@
+@{
+    ViewBag.Title = "Index";
+    Layout = "~/Views/Shared/_Layout.cshtml";
+}
+
+<h2>Movies</h2>
+
+<a class="btn btn-secondary" style="margin-bottom: 25px;" href="@Url.Action("Add", "Movies")">
+    NEW Movie
+</a>
+
+@*@if (Model.Count() == 0)
+{
+    <p>We don't have any Movies, yet.</p>
+}
+else
+{*@
+<table class="table table-hover results" style="width: 100%">
+    <thead>
+        <tr class="table-active">
+            <th scope="col" style="text-align:center; width: 50%">Movie Name</th>
+            <th scope="col" style="text-align: center; width: 40%">Genre</th>
+            <th style="text-align: center; width: 10%">Delete</th>
+        </tr>
+    </thead>
+    <tbody>
+        @*@foreach (var Movie in Model)
+            {
+                <tr>
+                    <td scope="row">
+                        <span data-href="@Url.Action("Edit", "Movies", new { id = Movie.id }, null)">@Movie.name</span>
+                    </td>
+                    <td scope="row">
+                        <span data-href="@Url.Action("Edit", "Movies", new { id = Movie.id }, null)">@Movie.membershipType.name</span>
+                    </td>
+                    <td scope="row">
+                        <i data-Movie-id="@Movie.id" class="fa fa-trash js-delete" aria-hidden="true"></i>
+                    </td>
+                </tr>
+            }*@
+    </tbody>
+</table>
+@*}*@
+
+<script>
+    $(function () {
+        var table = $("table").DataTable({
+            ajax: {
+                url: "/api/Movies",
+                dataSrc: ""
+            },
+            columns: [
+                {
+                    data: "name",
+                    render: function (data, type, movie) {
+                        return `<a href="/movies/edit/` + movie.id + `">`
+                            + data +
+                            `</span>`
+                    }
+                },
+                {
+                    data: "genre",
+                    render: function (data, type, movie) {
+                        return `<a href="/movies/edit/` + movie.id + `">`
+                            + data +
+                            `</span>`
+
+                    }
+                },
+                {
+                    data: "id",
+                    render: function (data) {
+                        return '<i data-movie-id="' + data + '" class="fa fa-trash js-delete" aria-hidden="true"></i>'
+                    }
+                }
+            ]
+        });
+
+        $("table").on("click", "i.js-delete", function () {
+            var obj = $(this);
+
+            Swal.fire({
+                title: '<strong>Are you sure you want to delete this movie?</strong>',
+                html: "<p>You won't be able to revert this!</p>",
+                icon: 'warning',
+                showCancelButton: true,
+                confirmButtonColor: '#3085d6',
+                cancelButtonColor: '#d33',
+                confirmButtonText: 'Yes, delete it!',
+            }).then((result) => {
+                if (result.isConfirmed) {
+                    Swal.fire(
+                        'Deleted!',
+                        'Movie has been deleted.',
+                        'success'
+                    )
+                    $.ajax({
+                        url: "/api/movies/" + obj.data('movie-id'),
+                        method: "DELETE",
+                        success: function () {
+                            obj.parent("td").parent("tr").fadeOut(250, function () {
+                                table.row(obj.parent("td").parent("tr")).remove().draw();
+                            });
+                        },
+                    });
+                } else {
+                    console.log("CANCELED");
+                }
+            });
+        });
+    });
+
+    //document.addEventListener("DOMContentLoaded", () => {
+    //    const rows = document.querySelectorAll("td span[data-href]");
+
+    //    rows.forEach(row => {
+    //        row.addEventListener("click", () => {
+    //            window.location.href = row.dataset.href;
+    //        });
+    //    });
+    //});
+</script>
+
+<style>
+    table, table td {
+        border: 0.1px solid rgb(146 146 146 / 0.2);
+        border-collapse: collapse;
+    }
+
+    table {
+        border-radius: 5px;
+        overflow: hidden;
+    }
+
+    table td a[href] {
+        display: inline-block;
+        color: white;
+        text-decoration: none;
+    }
+
+    table td a[href], table i.js-delete {
+        cursor: pointer;
+        width: 100%;
+        height: 100%;
+        padding: 5px;
+    }
+
+    table i.js-delete {
+        font-weight: 900;
+        width: 100%;
+        height: 100%;
+        text-align: center;
+        padding: 10px;
+    }
+
+    table i.js-delete:hover {
+        color: red;
+    }
+
+    .btn {
+        border-radius: 5px;
+    }
+
+    .dataTables_paginate.paging_simple_numbers {
+        float: right;
+        border-radius: 5px;
+        box-shadow: 3px 3px 8px 0 rgb(120 120 120 / 20%), -3px 3px 20px 0 rgb(120 120 120 / 19%);
+    }
+
+    .dataTables_paginate.paging_simple_numbers ul li {
+        padding: 8px 10px;
+    }
+
+    .dataTables_paginate.paging_simple_numbers ul li.paginate_button.active {
+        background-color: #ea39b8;
+    }
+
+    .dataTables_paginate.paging_simple_numbers ul li a {
+        color: #fff;
+        text-decoration: none;
+    }
+
+    .dataTables_paginate.paging_simple_numbers ul li.paginate_button.next {
+        border-top-right-radius: 5px;
+        border-bottom-right-radius: 5px;
+    }
+
+    .dataTables_paginate.paging_simple_numbers ul li.paginate_button.previous {
+        border-top-left-radius: 5px;
+        border-bottom-left-radius: 5px;
+    }
+
+    .dataTables_paginate.paging_simple_numbers ul li.paginate_button.next a,
+    .dataTables_paginate.paging_simple_numbers ul li.paginate_button.previous a {
+        color: #000;
+        font-weight: bold;
+    }
+
+    .dataTables_paginate.paging_simple_numbers ul li.paginate_button.next,
+    .dataTables_paginate.paging_simple_numbers ul li.paginate_button.previous {
+        background-color: #aaa;
+    }
+</style>

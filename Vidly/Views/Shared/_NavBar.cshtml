@@ -1,0 +1,66 @@
+﻿@using Microsoft.AspNet.Identity
+<nav id="navbarResponsive" class="navbar navbar-expand-lg navbar-dark bg-primary navbar-collapse collapse show" style="padding-left: 60px; margin-top:-50px; position:sticky; top:0; z-index: 9999">
+    <div class="container-fluid">
+        <a class="navbar-brand" href="@Url.Action("Index", "Home")" style="font-weight: bold">
+            <span style="z-index: -1; font-size: larger">Y. E.</span>
+        </a>
+        <button class="navbar-toggler" type="button" data-toggle="collapse" data-target="#navbarColor01" aria-controls="navbarColor01" aria-expanded="false" aria-label="Toggle navigation">
+            <span class="navbar-toggler-icon"></span>
+        </button>
+
+        <div class="collapse navbar-collapse" id="navbarColor01">
+            <ul class="navbar-nav me-auto">
+                @if (Request.IsAuthenticated && User.IsInRole("CanManageMovies"))
+                {
+                    <li class="nav-item">
+                        <a class="nav-link" href="@Url.Action("Index", "Customers")">Customers</a>
+                    </li>
+                    <li class="nav-item">
+                        <a class="nav-link" href="@Url.Action("Index", "Movies")">Movies</a>
+                    </li>
+                    <li class="nav-item">
+                        <a class="nav-link" href="@Url.Action("New", "Rentals")">New Rental</a>
+                    </li>
+                }
+                <li class="nav-item">
+                    <a class="nav-link" href="@Url.Action("About", "Home")">About</a>
+                </li>
+                <li class="nav-item">
+                    <a class="nav-link" href="@Url.Action("Contact", "Home")">Contact</a>
+                </li>
+            </ul>
+            @if (Request.IsAuthenticated)
+            {
+                using (Html.BeginForm("LogOff", "Account", FormMethod.Post, new { id = "logoutForm", @class = "navbar-right" }))
+                {
+                    @Html.AntiForgeryToken()
+
+                    <ul class="nav navbar-nav navbar-right">
+                        <li style="background: none; border: none; margin-right: 15px">
+                            <a class="btn btn-secondary my-2 my-sm-0" href="@Url.Action("Index","Manage")" title="Manage" style="background:none; border:none">
+                                Hello @User.Identity.GetUserName() !
+                            </a>
+                        </li>
+                        <li>
+                            <a class="btn btn-secondary my-2 my-sm-0" href="javascript:document.getElementById('logoutForm').submit()" style="background:none; border:none">
+                                LogOut
+                            </a>
+                        </li>
+                    </ul>
+                }
+
+            } else {
+                <form class="d-flex" style="background: none; border: none; margin-right: 15px">
+                    <a class="btn btn-secondary my-2 my-sm-0" href="@Url.Action("Register","Account")" style="background:none; border:none">
+                        Register
+                    </a>
+                </form>
+                <form class="d-flex" style="background:none; border:none">
+                    <a class="btn btn-secondary my-2 my-sm-0" href="@Url.Action("Login","Account")" style="background:none; border:none">
+                        LogIn
+                    </a>
+                </form>
+            }
+        </div>
+    </div>
+</nav>

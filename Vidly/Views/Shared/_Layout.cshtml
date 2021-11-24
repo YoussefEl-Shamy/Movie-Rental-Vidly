@@ -1,0 +1,102 @@
+﻿<!DOCTYPE html>
+<html>
+<head>
+    <script src="https://ajax.googleapis.com/ajax/libs/jquery/3.3.1/jquery.min.js"></script>
+    <script src="https://cdnjs.cloudflare.com/ajax/libs/popper.js/1.14.0/umd/popper.min.js"></script>
+    <script src="https://maxcdn.bootstrapcdn.com/bootstrap/4.1.0/js/bootstrap.min.js"></script>
+    <script src="https://cdnjs.cloudflare.com/ajax/libs/sweetalert/1.1.3/sweetalert.min.js"></script>
+    <script src="https://cdn.jsdelivr.net/npm/sweetalert2@11"></script>
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/sweetalert/1.1.3/sweetalert.min.css">
+    <link rel="stylesheet" href="https://use.fontawesome.com/releases/v5.0.7/css/all.css">
+    <meta charset="utf-8" />
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>@ViewBag.Title - My ASP.NET Application</title>
+    @Styles.Render("~/Content/css")
+    @Scripts.Render("~/bundles/modernizr")
+    <style>
+        /* width */
+        ::-webkit-scrollbar {
+            width: 20px;
+        }
+
+        /* Track */
+        ::-webkit-scrollbar-track {
+            box-shadow: inset 0 0 5px grey;
+        }
+
+        /* Handle */
+        ::-webkit-scrollbar-thumb {
+            background: #ea39b8;
+        }
+
+        /* Handle on hover */
+        ::-webkit-scrollbar-thumb:hover {
+            background: rgb(234 57 184 / 80%)
+        }
+
+        .field-validation-error, label.error {
+            font-weight: 500;
+            font-size: 14px;
+            color: red;
+            border-bottom: 1px solid red;
+            border-radius: 8px;
+            padding: 5px;
+        }
+
+        .input-validation-error, input.error {
+            border: 1.5px solid red;
+        }
+    </style>
+
+    <script>
+        $(function () {
+            let wh = $(window).height();
+            let container = $(".container.body-content");
+            let lastHeight = container.outerHeight();
+
+            function checkForChanges() {
+                if (container.outerHeight() != lastHeight) {
+                    $("body").innerHeight(
+                        $("nav").innerHeight()
+                        + $(".container.body-content").innerHeight()
+                        + $("footer").innerHeight() + "px"
+                    );
+                    if ($('body').innerHeight() < wh) {
+                        $('body').innerHeight(wh);
+                    }
+                    lastHeight = container.outerHeight();
+                }
+                setTimeout(checkForChanges, 1);
+            }
+
+            checkForChanges();
+
+            if ($('body').innerHeight() < wh) {
+                $('body').innerHeight(wh);
+            }
+
+            $(window).on("resize", function () {
+                if ($('body').innerHeight() < wh) {
+                    wh = $(window).height();
+                    $('body').innerHeight(wh);
+                }
+            });
+        });
+    </script>
+</head>
+<body>
+    @Html.Partial("_NavBar")
+    <div class="container body-content" style="margin-top: 20px;">
+        @RenderBody()
+        <hr />
+        <footer>
+            <p>&copy; @DateTime.Now.Year - Y. E.</p>
+        </footer>
+    </div>
+
+    @*@Scripts.Render("~/bundles/jquery")
+    @Scripts.Render("~/bundles/bootstrap")*@
+    @Scripts.Render("~/bundles/lib")
+    @RenderSection("scripts", required: false)
+</body>
+</html>

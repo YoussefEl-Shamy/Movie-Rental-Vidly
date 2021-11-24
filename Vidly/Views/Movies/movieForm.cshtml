@@ -1,0 +1,80 @@
+﻿@model Vidly.Models.Movie
+@{
+    ViewBag.Title = "Add";
+    Layout = "~/Views/Shared/_Layout.cshtml";
+}
+
+@if (Model.id == 0)
+{
+    <h2>New Movie</h2>
+}
+else
+{
+    <h2>Edit Movie</h2>
+}
+
+@using (Html.BeginForm("Save", "Movies"))
+{
+    @Html.ValidationSummary(true, "Please Fix The Following Errors.")
+    <div class="form-group">
+        @Html.LabelFor(m => m.name)
+        @Html.TextBoxFor(m => m.name, new { @class = "form-control", @placeholder = "Enter Movie Name" })
+        @Html.ValidationMessageFor(m => m.name)
+    </div>
+
+    <div class="form-group">
+        @Html.LabelFor(m => m.ReleaseDate)
+        @Html.TextBoxFor(m => m.ReleaseDate, "{0:d MMM yyyy}",
+            new { @class = "form-control", @placeholder = "Enter Release Date", @Value = Model.id == 0? "": Model.ReleaseDate.ToString("dd MMM yyyy") })
+        @Html.ValidationMessageFor(m => m.ReleaseDate)
+    </div>
+
+    <div class="form-group" style="font-weight:bold">
+        @Html.LabelFor(m => m.genre)
+        @Html.DropDownListFor(m => m.genre, new List<SelectListItem>
+        {
+            new SelectListItem{Text="Thriller", Value="Thriller"},
+            new SelectListItem{Text="Action", Value="Action"},
+            new SelectListItem{Text="Family", Value="Family"},
+            new SelectListItem{Text="Romance", Value="Romance"},
+            new SelectListItem{Text="Comedy", Value="Comedy"},
+            new SelectListItem{Text="Drama", Value="Drama"},
+        }, "Select Genre", new { @class = "form-control" })
+        @Html.ValidationMessageFor(m => m.genre)
+    </div>
+
+    <div class="form-group">
+        @Html.LabelFor(m => m.numberInStock)
+        @Html.TextBoxFor(m => m.numberInStock,
+            new { @class = "form-control", @placeholder = "How many copies are available?", @Value = Model.id == 0 ? "" : Model.numberInStock.ToString() })
+        @Html.ValidationMessageFor(m => m.numberInStock)
+    </div>
+
+    @Html.HiddenFor(m => m.id)
+    @Html.HiddenFor(m => m.dateAdded)
+    @Html.AntiForgeryToken()
+    <button type="submit" class="btn btn-primary">Save</button>
+}
+
+@section scripts {
+    @Scripts.Render("~/bundles/jqueryval")
+}
+
+<style>
+    .btn {
+        border-radius: 5px;
+    }
+
+    .checkbox-inline, .custom-control-label {
+        cursor: pointer;
+    }
+
+    .form-group {
+        margin-top: 20px;
+        margin-bottom: 15px;
+    }
+
+    .form-group:first-child {
+        margin-top: 30px;
+    }
+</style>
